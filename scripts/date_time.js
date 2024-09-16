@@ -1,23 +1,22 @@
+let time_elem = document.querySelector(".time__text");
+let date_elem = document.querySelector(".date__text");
 
 
-let hour_elem = document.querySelector(".time__text--hour");
-let minutes_elem = document.querySelector(".time__text--minutes");
-let seconds_elem = document.querySelector(".time__text--seconds");
-let hour;
-let minutes;
-let seconds;
-let date;
-setTimeout(timer , 1000);
-
+timer();
 function timer() {
-    date = new Date();
-    hour = date.getHours(); 
-    minutes = date.getMinutes(); 
-    seconds = date.getSeconds(); 
-    
-    hour_elem.innerHTML = hour;
-    minutes_elem.innerHTML = minutes;
-    seconds_elem.innerHTML = seconds;
+    let time = new Date();
+    let time_local = time.toLocaleTimeString();
+    time_elem.textContent = time_local
     setTimeout(timer, 1000);
 }
 
+let date = new Date();
+const options = {
+    day: 'numeric',
+    month: 'long',
+    weekday: 'long',
+};
+let date_local = date.toLocaleDateString('ru-RU', options);
+date_elem.textContent = date_local;
+
+//1. сделать красоту 2. чтобы таймер появлялся сразу  без задержки. но без потворяющегося textcontent
