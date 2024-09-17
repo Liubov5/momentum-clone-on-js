@@ -3,34 +3,58 @@ let tasks = [];
 let input = document.querySelector(".task--input");
 let tasks_list = document.querySelector(".tasks__list--wrap");
 
-function createTask(arg) {
-    let li = document.createElement("li");
-    let checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    let span = document.createElement("span");
-    li.appendChild(checkbox);
-    li.appendChild(span);
-    li.classList.add("task__item")
-    span.textContent = arg;
-    tasks_list.appendChild(li);
-    var id = "id" + Math.random().toString(16).slice(2);
-    let task = {
-        id:id,
-        text:arg,
-        status:false,
+function createTasks(props) {
+    tasks_list.innerHTML = "";
+    for(let i = 0; i< props.length; i++) {
+        let li = document.createElement("li");
+        let checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        let span = document.createElement("span");
+
+        let img_wrap = document.createElement("div");
+        img_wrap.classList.add("task__icon--wrap")
+
+        let delete_icon = document.createElement("img");
+        delete_icon.src = "./images/delete-icon.png";
+
+        li.appendChild(checkbox);
+        li.appendChild(span);
+        li.appendChild(img_wrap);
+        li.classList.add("task__item");
+
+        if(props[i].status === true) {
+            li.classList.add("checked");
+            checkbox.checked = true
+        }else {
+            let edit_icon = document.createElement("img");
+            edit_icon.src = "./images/edit-icon.png";
+            img_wrap.appendChild(edit_icon);
+        }
+        img_wrap.appendChild(delete_icon);
+
+        span.textContent = props[i].text;
+        tasks_list.appendChild(li);
+        
+        li.setAttribute('data-id', props[i].id);
+        li.addEventListener("click", handleClick);
+        delete_icon.addEventListener("click", (event)=>handleDeleteClick(props[i].id, event))
     }
-    tasks.push(task);
-    console.log(tasks)
-    li.addEventListener("click", handleClick.bind(task));
-    li.setAttribute('data-id',task.id);
 }
 
 input.addEventListener('keyup', function(e) {
+   
     if (e.keyCode === 13) {
         let value = this.value;
         value = value.trim();
         if(value.length != 0 ){
-            createTask(value);
+            var id = "id" + Math.random().toString(16).slice(2);
+            let task = {
+                id:id,
+                text: value,
+                status:false,
+            }
+            tasks.push(task);
+            createTasks(tasks)
             this.value = "";
         }
         else{
@@ -38,9 +62,24 @@ input.addEventListener('keyup', function(e) {
         }       
     }
   });
-
-  function handleClick(arg){
-    console.log(this, arg)
-    this.classList.add("checked");
-    this.firstChild.checked = true;
+  
+  function handleClick(e){
+    e.stopPropagation();
+    let id = this.getAttribute("data-id");
+    let task = tasks.find(i => i.id === id);
+    task.status === false ? this.classList.add("checked") : this.classList.remove("checked")
+    task.status = !task.status;   
+    this.firstChild.checked = task.status;
+    //удалить возможность редактировать
+    //change(task, this, this.firstChild);
+   
   }
+
+  function handleDeleteClick(id, e){
+    e.stopPropagation();
+    let index = tasks.findIndex((t) => t.id === id);
+    tasks.splice(index,1);
+    createTasks(tasks)
+}
+
+  //если текст не влез. то сократить точками

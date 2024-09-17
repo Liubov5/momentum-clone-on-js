@@ -34,8 +34,18 @@ body{
     column-gap: 10px;
     flex-wrap: wrap;
     margin-bottom: 10px;
+    
 }
 .checked{
     text-decoration: line-through;
     opacity: 0.5;
+}
+.task__item img{
+    width: 15px;
+    height: 15px;
+    margin-left: 5px;
+}
+.task__icon--wrap{
+    margin-left: auto;
+    max-width: 40px;
 }
