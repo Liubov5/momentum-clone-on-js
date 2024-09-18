@@ -5,6 +5,11 @@ let tasks_list = document.querySelector(".tasks__list--wrap");
 
 function createTasks(props) {
     tasks_list.innerHTML = "";
+    let is_done_tasks = tasks.some(task=>task.status == true);
+    if(is_done_tasks) {
+        //create button
+    }
+
     for(let i = 0; i< props.length; i++) {
         let li = document.createElement("li");
         let checkbox = document.createElement("input");
@@ -63,14 +68,15 @@ input.addEventListener('keyup', function(e) {
     }
   });
   
-  function handleClick(e){
+function handleClick(e){
     e.stopPropagation();
     let id = this.getAttribute("data-id");
     let task = tasks.find(i => i.id === id);
     task.status === false ? this.classList.add("checked") : this.classList.remove("checked")
     task.status = !task.status;   
     this.firstChild.checked = task.status;
-    //удалить возможность редактировать
+    createTasks(tasks);
+    //удалить возможность редактировать после нажатия на чекбокс
     //change(task, this, this.firstChild);
    
   }

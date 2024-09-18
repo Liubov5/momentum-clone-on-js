@@ -49,3 +49,7 @@ body{
     margin-left: auto;
     max-width: 40px;
 }
+
+.weather__icon{
+    width:30px;
+}
