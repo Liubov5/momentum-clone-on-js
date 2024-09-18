@@ -7,7 +7,7 @@ function createTasks(props) {
     tasks_list.innerHTML = "";
     let is_done_tasks = tasks.some(task=>task.status == true);
     if(is_done_tasks) {
-        //create button
+        //create button delete all done tasks
     }
 
     for(let i = 0; i< props.length; i++) {

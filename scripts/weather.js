@@ -32,53 +32,65 @@ const weather_interpretation_codes = {
 
 let weather_code;
 let current_temperature;
+let coordinates;
+let city;
 
 let weather_text_elem = document.querySelector(".weather__text");
 let weather_icon_elem = document.querySelector(".weather__icon");
 let weather_city_elem = document.querySelector(".weather__city");
 
+let getWeather = async(coordinates)=>{
+  await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${coordinates[0]}&longitude=${coordinates[1]}&current=temperature_2m,weather_code`).then(function(resp){ return resp.json()}).then(function(data){
+      current_temperature = data.current.temperature_2m;
+      weather_text_elem.textContent = `${Math.round(current_temperature)} °C`;
+      weather_code = data.current.weather_code;
+      weather_icon_elem.src = weather_interpretation_codes[weather_code];
+  })
+  .catch(function(e){
+      console.log(e)
+  })
+}
 
 window.onload = async () => {
-  let city = localStorage.getItem("city");
-  city === null ? localStorage.setItem('city', 'Краснодар') : localStorage.getItem('city');
-    
-
+  city = localStorage.getItem("city");
+  if(city === null) {
     const getCoords = async () => {
-            const pos = await new Promise((resolve, reject) => {
-              navigator.geolocation.getCurrentPosition(resolve, reject);
-            });
-        
-            return {
-              longitude: pos.coords.longitude,
-              latitude: pos.coords.latitude,
-            };
+      const pos = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+      return [
+          pos.coords.longitude,
+          pos.coords.latitude,
+      ];
     };
-    
-    const {longitude, latitude} = await getCoords();
-    ymaps.ready(init);
-    function init() {
-      let myReverseGeocoder = ymaps.geocode([latitude,longitude]);
+    coordinates = await getCoords();
+   
+    ymaps.ready(getCityName);
+    function getCityName() {
+      let myReverseGeocoder = ymaps.geocode([coordinates[1], coordinates[0]]);
       myReverseGeocoder.then(
         function (res) {
           let nearest = res.geoObjects.get(0);
           city = nearest.properties.get("description");
-          weather_city_elem.textContent = city;
+          localStorage.setItem('city', city);
+          getWeather(coordinates).then(()=> weather_city_elem.textContent = city)
         }
       );
     }
-    
 
-    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code`)
-        .then(function(resp){ return resp.json()})
-        .then(function(data){
-            current_temperature = data.current.temperature_2m;
-            weather_text_elem.textContent = `${Math.round(current_temperature)} °C`;
-            weather_code = data.current.weather_code;
-            weather_icon_elem.src = weather_interpretation_codes[weather_code]
-        })
-        .catch(function(e){
-            console.log(e)
-    })
+  }else{
+      city = localStorage.getItem('city');
+      ymaps.ready(getCoordinatesByCityName);
+      function getCoordinatesByCityName() {
+        let myGeocoder = ymaps.geocode(city);
+        myGeocoder.then(
+            function (res) {
+                coordinates = res.geoObjects.get(0).geometry.getCoordinates();
+                getWeather(coordinates).then(()=> weather_city_elem.textContent = city)
+            },
+        );
+      }
+  }
 }
 
 //получить название города с помощью стороннего api

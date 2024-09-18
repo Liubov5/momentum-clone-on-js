@@ -9,6 +9,7 @@ html, body{
 body{
     background-size: cover;
     background-position: center;
+    color: white;
 }
 
 .tasks{
@@ -16,6 +17,7 @@ body{
     padding: 20px;
     border-radius: 10px;   
     max-width: 300px;
+    color: black;
 }
 .task--input:focus{
     outline-width: 0px;
