@@ -10,27 +10,36 @@
     <title>Momentum</title>
 </head>
 <body>
+    <div class="wrapper"></div>
     <section class="time">
-        <h1 class="time__text"></h1>  
+        <div class="time__wrap">
+            <h1 class="time__text"></h1>  
+            <h2 class="date__text"></h2>
+        </div>
     </section>
-    <section class="date">
-        <h2 class="date__text"></h2>
-    </section>
+    
     <section class="weather">
-        <h3 class="weather__text"></h3>
-        <img src="" class="weather__icon">
+        <div class="weather__wrap">
+            <img src="" class="weather__icon">
+            <h3 class="weather__text"></h3>
+        </div>
         <h3 class="weather__city"></h3>
     </section>
     <section class="tasks">
         <div class="tasks__list">
+            <button class="tasks__btn--delete">
+                Удалить выполненные задачи
+            </button>
             <ul class="tasks__list--wrap">
                 Нет текущих задач
             </ul>
         </div>
-        <div class="tasks__add"></div>
+        <div class="tasks__add">
             <input class="task--input" placeholder="Новая задача"/>
         </div>
     </section>
+   
+    
     <script src="scripts/date_time.js"></script>
     <script src="scripts/weather.js"></script>
     <script src="scripts/slider.js"></script>

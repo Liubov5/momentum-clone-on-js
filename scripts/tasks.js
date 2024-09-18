@@ -2,40 +2,39 @@ let tasks = [];
 
 let input = document.querySelector(".task--input");
 let tasks_list = document.querySelector(".tasks__list--wrap");
+let tasks__btn__delete = document.querySelector(".tasks__btn--delete");
+
+tasks__btn__delete.addEventListener("click", handleDeleteAllDoneTaskClick);
 
 function createTasks(props) {
     tasks_list.innerHTML = "";
+
     let is_done_tasks = tasks.some(task=>task.status == true);
-    if(is_done_tasks) {
-        //create button delete all done tasks
-    }
+    is_done_tasks === true ?  tasks__btn__delete.classList.add("visible") : tasks__btn__delete.classList.remove("visible");
+   
 
     for(let i = 0; i< props.length; i++) {
         let li = document.createElement("li");
+        li.classList.add("task__item");
+        
         let checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        let span = document.createElement("span");
 
-        let img_wrap = document.createElement("div");
-        img_wrap.classList.add("task__icon--wrap")
+        let span = document.createElement("span");
 
         let delete_icon = document.createElement("img");
         delete_icon.src = "./images/delete-icon.png";
 
         li.appendChild(checkbox);
         li.appendChild(span);
-        li.appendChild(img_wrap);
-        li.classList.add("task__item");
+        li.appendChild(delete_icon);
+        
 
         if(props[i].status === true) {
             li.classList.add("checked");
             checkbox.checked = true
-        }else {
-            let edit_icon = document.createElement("img");
-            edit_icon.src = "./images/edit-icon.png";
-            img_wrap.appendChild(edit_icon);
         }
-        img_wrap.appendChild(delete_icon);
+        
 
         span.textContent = props[i].text;
         tasks_list.appendChild(li);
@@ -66,7 +65,7 @@ input.addEventListener('keyup', function(e) {
             console.log("пустое поле!");
         }       
     }
-  });
+});
   
 function handleClick(e){
     e.stopPropagation();
@@ -79,13 +78,20 @@ function handleClick(e){
     //удалить возможность редактировать после нажатия на чекбокс
     //change(task, this, this.firstChild);
    
-  }
+}
 
-  function handleDeleteClick(id, e){
+function handleDeleteClick(id, e){
     e.stopPropagation();
     let index = tasks.findIndex((t) => t.id === id);
     tasks.splice(index,1);
     createTasks(tasks)
 }
 
-  //если текст не влез. то сократить точками
+function handleDeleteAllDoneTaskClick(e){
+    tasks = tasks.filter(t=>t.status !== true);
+    console.log(tasks)
+    createTasks(tasks)
+}
+
+
+ 
