@@ -12,7 +12,7 @@ function createTasks(props) {
     let is_done_tasks = tasks.some(task=>task.status == true);
     is_done_tasks === true ?  tasks__btn__delete.classList.add("visible") : tasks__btn__delete.classList.remove("visible");
    
-
+    //отрисовка задач
     for(let i = 0; i< props.length; i++) {
         let li = document.createElement("li");
         li.classList.add("task__item");
@@ -35,7 +35,6 @@ function createTasks(props) {
             checkbox.checked = true
         }
         
-
         span.textContent = props[i].text;
         tasks_list.appendChild(li);
         

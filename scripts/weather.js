@@ -39,6 +39,7 @@ let weather_text_elem = document.querySelector(".weather__text");
 let weather_icon_elem = document.querySelector(".weather__icon");
 let weather_city_elem = document.querySelector(".weather__city");
 
+//получить погоду
 let getWeather = async(coordinates)=>{
   await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${coordinates[0]}&longitude=${coordinates[1]}&current=temperature_2m,weather_code`).then(function(resp){ return resp.json()}).then(function(data){
       current_temperature = data.current.temperature_2m;
@@ -54,6 +55,7 @@ let getWeather = async(coordinates)=>{
 window.onload = async () => {
   city = localStorage.getItem("city");
   if(city === null) {
+    //получить координаты от устройства
     const getCoords = async () => {
       const pos = await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
@@ -64,7 +66,7 @@ window.onload = async () => {
       ];
     };
     coordinates = await getCoords();
-   
+    //получить название нас.пункта по координатам от яндекс api
     ymaps.ready(getCityName);
     function getCityName() {
       let myReverseGeocoder = ymaps.geocode([coordinates[1], coordinates[0]]);
@@ -73,13 +75,14 @@ window.onload = async () => {
           let nearest = res.geoObjects.get(0);
           city = nearest.properties.get("description");
           localStorage.setItem('city', city);
-          getWeather(coordinates).then(()=> weather_city_elem.textContent = city)
+          getWeather(coordinates).then(()=> weather_city_elem.textContent = city) 
         }
       );
     }
 
   }else{
       city = localStorage.getItem('city');
+      //получить координаты по названию нас.пункта в localstorage от яндекс api
       ymaps.ready(getCoordinatesByCityName);
       function getCoordinatesByCityName() {
         let myGeocoder = ymaps.geocode(city);
@@ -93,5 +96,3 @@ window.onload = async () => {
   }
 }
 
-//получить название города с помощью стороннего api
-//ренедеринг всего сайта только после загрузки геолокации

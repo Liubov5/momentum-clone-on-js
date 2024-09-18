@@ -1,6 +1,5 @@
-
-const time = new Date();
-const current_time = time.getHours();
+const time_slider = new Date();
+const current_time = time_slider.getHours();
 
 if(current_time >= 0 && current_time < 6) {
     document.body.style.backgroundImage = "url(./images/01.jpg)"

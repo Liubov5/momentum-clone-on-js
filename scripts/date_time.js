@@ -18,5 +18,3 @@ const options = {
 };
 let date_local = date.toLocaleDateString('ru-RU', options);
 date_elem.textContent = date_local;
-
-//1. сделать красоту 2. чтобы таймер появлялся сразу  без задержки. но без потворяющегося textcontent
